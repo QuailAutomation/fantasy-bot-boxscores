@@ -1,0 +1,6 @@
+git+https://github.com/QuailAutomation/nhl_scraper@master#egg=nhl_scraper
+
+pandas==1.5.2
+# jsonpath-ng
+pymongo
+
