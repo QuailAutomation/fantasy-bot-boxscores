@@ -14,6 +14,21 @@
                 ],
                 "projectType": "general"
             }
+        },
+        {
+            "name": "Python: Celery Worker",
+            "type": "python",
+            "request": "launch",
+            "module": "celery",
+            "console": "integratedTerminal",
+            // "justMyCode": false,
+            "args": [
+                "-A",
+                "boxscores",
+                "boxscores",
+                "-l",
+                "debug",                
+            ]
         }
     ]
 }
