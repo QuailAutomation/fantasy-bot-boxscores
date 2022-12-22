@@ -7,32 +7,25 @@ from nhl_scraper.nhl import Scraper
 
 from boxscores.celery import Celery
 
-
-cel = Celery('boxscores', backend="redis://localhost")
-
-
-@cel.task(name='hello_world1')
-def hello(name='world', name2='d'):
-    return 'hello ' + name
-
 DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-season_opening_date = date(2022,10, 7)
-season_end_date = date(2022,10,8)
-
-game_date_range = pd.date_range(season_opening_date, season_end_date)
+# season_opening_date = date(2022,10, 7)
+# season_end_date = date(2022,10,8)
 
 nhl_scraper = Scraper()
-for game_date in game_date_range:
-    nhl_game_date = game_date.to_pydatetime().replace(microsecond=0)
-    games = nhl_scraper.games(nhl_game_date.date(), nhl_game_date.date())
 
-    for game in games:
-        print('downloading boxscore, id={}'.format(game))
-        box_score = nhl_scraper.box_scores(game,format='json')
-        box_score['game_date'] = datetime.strftime(nhl_game_date, DATETIME_FORMAT)
-        box_score['timestamp'] = game_date.timestamp()
-        with open('.box-scores/{}.json'.format(game), 'w') as outfile:
-            json.dump(box_score, outfile)
-        time.sleep(1)
-pass
+def scrape_boxscores(startdate, enddate, output_dir='/boxscores', sleep_timout=1):
+    print(f'start: {startdate}, end: {enddate}')
+    game_date_range = pd.date_range(startdate, enddate)
+    for game_date in game_date_range:
+        nhl_game_date = game_date.to_pydatetime().replace(microsecond=0)
+        games = nhl_scraper.games(nhl_game_date.date(), nhl_game_date.date())
+
+        for game in games:
+            print('downloading boxscore, id={}'.format(game))
+            box_score = nhl_scraper.box_scores(game,format='json')
+            box_score['game_date'] = datetime.strftime(nhl_game_date, DATETIME_FORMAT)
+            box_score['timestamp'] = game_date.timestamp()
+            with open(f'{output_dir}/{game}.json', 'w') as outfile:
+                json.dump(box_score, outfile)
+            time.sleep(sleep_timout)
