@@ -1,15 +1,16 @@
 # For more information, please refer to https://aka.ms/vscode-docker-python
-FROM python:3.11 as compile-image
+FROM python:3.10 as compile-image
 
 RUN python -m venv /opt/venv
 
-# Install pip requirements
-COPY requirements.txt .
-RUN python -m pip install -r requirements.txt
+ENV PATH="/opt/venv/bin:$PATH"
 
-FROM python:3.8-slim AS build-image
+COPY requirements.txt /requirements.txt
+RUN pip install -r /requirements.txt
 
-COPY --from=compile-image /opt/venv /opt/venv
+FROM python:3.10-slim AS build-image
+
+COPY --from=compile-image /opt/venv /app/venv
 WORKDIR /app
 COPY . /app
 
