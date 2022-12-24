@@ -25,7 +25,7 @@
             "args": [
                 "-A",
                 "boxscores",
-                "boxscores",
+                "worker",
                 "-l",
                 "debug",                
             ]
