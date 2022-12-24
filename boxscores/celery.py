@@ -8,4 +8,4 @@ BROKER_URL=os.getenv("BROKER_URL", 'amqp://localhost:5672//')
 
 CELERY_TASK_RESULT_EXPIRES = 300
 
-cel = Celery('boxscores_name', backend=CELERY_RESULT_BACKEND, include=['boxscores.worker'])
+cel = Celery('boxscores, backend=CELERY_RESULT_BACKEND, include=['boxscores.worker'])
